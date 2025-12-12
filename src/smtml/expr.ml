@@ -86,7 +86,7 @@ module Expr = struct
     | Binder (b, vars, e) -> h (b, vars, e.tag)
 end
 
-module Hc = Hc.Make [@inlined hint] (Expr)
+module Hc = Hc.Make_strong [@inlined hint] (Expr)
 
 let equal (hte1 : t) (hte2 : t) = phys_equal hte1 hte2 [@@inline]
 
