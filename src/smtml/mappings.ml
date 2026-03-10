@@ -766,11 +766,17 @@ module Make (M_with_make : M_with_make) : S_with_fresh = struct
         | List _ | Binder _ ->
           Fmt.failwith "Cannot encode expression: %a" Expr.pp hte
 
+      and wrapper ctx hte =
+
+        try encode_expr ctx hte with e -> begin
+       Logs.err (fun m -> m "encode_expr: %a" Expr.pp hte);
+       raise e
+        end
       and encode_exprs ctx (es : Expr.t list) : symbol_ctx * M.term list =
         let ctx, exprs =
           List.fold_left
             (fun (ctx, es) e ->
-              let ctx, e = encode_expr ctx e in
+              let ctx, e = wrapper ctx e in
               (ctx, e :: es) )
             (ctx, []) es
         in

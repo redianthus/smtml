@@ -223,6 +223,9 @@ let sign_extend width bv =
   let extended = Z.logor bv.value sign_mask in
   make extended new_width
 
-let to_string bv = Fmt.str "%a" pp bv
+let to_string bv =
+  let out = Fmt.str "%a" pp bv in
+  Log.err (fun m -> m "BITVECTOR: %s" out);
+  out
 
 let to_json bv = `String (to_string bv)
